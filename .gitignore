@@ -1,0 +1,11 @@
+# Archivos generados por Maven
+target/
+
+# Archivos de Eclipse
+.settings/
+.classpath
+.project
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
