@@ -11,7 +11,7 @@
 	<h1>Gestor de Personas</h1>
 	    <ul>
 	        <li>
-	            <a href="agregar.jsp"> Agregar Personas </a>
+	            <a href="agregar.jsp"> Agregar Personas - CI CD Funcionando </a>
 	        </li>
 	        <li>
 	            <a href="listarPersonas"> Listar Personas </a>
