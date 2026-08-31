@@ -26,3 +26,9 @@ jobs:
       - name: Iniciar build
         run: |
           oc start-build practico-1-git --follow
+
+      - name: Actualizar aplicación Serverless
+        run: |
+          oc patch ksvc practico-1-git \
+            --type='merge' \
+            -p '{"spec":{"template":{"spec":{"containers":[{"name":"practico-1-git","image":"image-registry.openshift-image-registry.svc:5000/martingallardo-dev/practico-1-git:latest"}]}}}}'
