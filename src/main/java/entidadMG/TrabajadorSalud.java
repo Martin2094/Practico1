@@ -1,8 +1,11 @@
 package entidadMG;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TrabajadorSalud {
+public class TrabajadorSalud implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private Integer CI;
 
     private String nombre;

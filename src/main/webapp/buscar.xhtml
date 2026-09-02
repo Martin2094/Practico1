@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Buscar Trabajador</title>
+</h:head>
+
+<h:body>
+    <h1>Buscar Trabajador de la Salud</h1>
+    <h:form id="formBuscar">
+        <h:outputLabel value="CI:" />
+        <h:inputText value="#{trabajadorSaludJSF.ciBusqueda}" required="true" />
+
+        <h:commandButton value="Buscar" action="#{trabajadorSaludJSF.buscar}">
+            <f:ajax execute="@form" render="resultado" />
+        </h:commandButton>
+
+        <h:panelGroup id="resultado" layout="block">
+            <h:panelGroup rendered="#{not empty trabajadorSaludJSF.trabajadorEncontrado}">
+                <h2>Trabajador encontrado</h2>
+                <p>
+                    CI:
+                    #{trabajadorSaludJSF.trabajadorEncontrado.CI}
+                </p>
+
+                <p>
+                    Nombre:
+                    #{trabajadorSaludJSF.trabajadorEncontrado.nombre}
+                </p>
+
+                <p>
+                    Fecha de nacimiento:
+                    #{trabajadorSaludJSF.trabajadorEncontrado.nacimiento}
+                </p>
+            </h:panelGroup>
+
+            <h:outputText value="#{trabajadorSaludJSF.error}" rendered="#{not empty trabajadorSaludJSF.error}" />
+        </h:panelGroup>
+    </h:form>
+
+    <h:link value="Volver" outcome="index" />
+</h:body>
+
+</html>

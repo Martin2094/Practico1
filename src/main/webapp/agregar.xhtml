@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Agregar Trabajador</title>
+</h:head>
+
+<h:body>
+    <h1>Agregar Trabajador de la Salud</h1>
+    <h:form id="formAgregar">
+        <h:panelGrid columns="2">
+            <h:outputLabel value="CI:" />
+            <h:inputText value="#{trabajadorSaludJSF.ci}" required="true" />
+            <h:outputLabel value="Nombre:" />
+            <h:inputText value="#{trabajadorSaludJSF.nombre}" required="true" />
+            <h:outputLabel value="Fecha de nacimiento:" />
+            <h:inputText value="#{trabajadorSaludJSF.nacimiento}" required="true">
+                <f:convertDateTime type="localDate" pattern="dd-MM-yyyy" />
+                <f:passThroughAttribute name="placeholder" value="Ej: 20-05-2000" />
+            </h:inputText>
+        </h:panelGrid>
+
+        <h:commandButton value="Agregar" action="#{trabajadorSaludJSF.agregar}">
+            <f:ajax execute="@form" render="@form" />
+        </h:commandButton>
+
+        <h:panelGroup>
+            <h:outputText value="#{trabajadorSaludJSF.mensaje}" rendered="#{not empty trabajadorSaludJSF.mensaje}" />
+            <br />
+            <h:outputText value="#{trabajadorSaludJSF.error}" rendered="#{not empty trabajadorSaludJSF.error}" />
+        </h:panelGroup>
+    </h:form>
+    <h:link value="Volver" outcome="index" />
+</h:body>
+
+</html>

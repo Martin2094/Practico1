@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -70,8 +71,8 @@ public class ConsolaJava {
         Context contexto = new InitialContext(propiedades);
         String jndi =
                 "ejb:/Practico1-1.0.0/"
-                + "TrabajadorSaludNegocioBean!"
-                + "negocio.TrabajadorSaludNegocioRemota";
+                + "TrabajadorNegBean!"
+                + "negocio.TrabajadorNegRemota";
         return (TrabajadorNegRemota) contexto.lookup(jndi);
     }
     
@@ -83,10 +84,13 @@ public class ConsolaJava {
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
 
-        System.out.print("Fecha nacimiento (AAAA-MM-DD): ");
+        System.out.print("Fecha nacimiento (DD-MM-AAAA): ");
+
         String fechaTexto = scanner.nextLine();
 
-        LocalDate fechaNacimiento = LocalDate.parse(fechaTexto);
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        LocalDate fechaNacimiento = LocalDate.parse(fechaTexto, formato);
 
         TrabajadorSalud trabajador = new TrabajadorSalud();
 
