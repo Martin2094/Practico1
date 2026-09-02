@@ -28,7 +28,7 @@ jobs:
           oc start-build practico-1-git --follow
 
       - name: Actualizar aplicación Serverless
-          run: |
+        run: |
             IMAGE=$(oc get istag practico-1-git:latest -o jsonpath='{.image.dockerImageReference}')
         
             echo "Nueva imagen: $IMAGE"
