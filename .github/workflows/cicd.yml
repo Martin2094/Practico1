@@ -28,7 +28,11 @@ jobs:
           oc start-build practico-1-git --follow
 
       - name: Actualizar aplicación Serverless
-        run: |
-          oc patch ksvc practico-1-git \
-            --type='merge' \
-            -p '{"spec":{"template":{"spec":{"containers":[{"name":"practico-1-git","image":"image-registry.openshift-image-registry.svc:5000/martingallardo-dev/practico-1-git:latest"}]}}}}'
+          run: |
+            IMAGE=$(oc get istag practico-1-git:latest -o jsonpath='{.image.dockerImageReference}')
+        
+            echo "Nueva imagen: $IMAGE"
+        
+            oc patch ksvc practico-1-git \
+              --type='merge' \
+              -p "{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"name\":\"practico-1-git\",\"image\":\"$IMAGE\"}]}}}}"
