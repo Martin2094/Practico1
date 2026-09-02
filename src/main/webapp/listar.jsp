@@ -1,41 +1,35 @@
 <%@ page import="java.util.List" %>
-<%@ page import="entidadMG.Persona" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page import="entidadMG.TrabajadorSalud" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Lista de Personas</title>
+    <meta charset="UTF-8">
+    <title>Lista de Trabajadores de la Salud</title>
 </head>
 
 <body>
-	<h1>Lista de Personas</h1>
-    <%
-        List<Persona> personas = (List<Persona>) request.getAttribute("personas");
-    %>
-
-    <% if (personas == null || personas.isEmpty()) { 
-	    %>
-	        <p>No hay personas registradas.</p>
-	    <%
-    } else { %>
+    <h1>Lista de Trabajadores de la Salud</h1>
+    <% List<TrabajadorSalud> trabajadores = (List<TrabajadorSalud>) request.getAttribute("trabajadores"); %>
+    <% if (trabajadores == null || trabajadores.isEmpty()) { %>
+        <p>No hay trabajadores de la salud registrados.</p>
+    <% } else { %>
         <table border="1">
             <tr>
-                <th>ID</th>
+                <th>CI</th>
                 <th>Nombre</th>
                 <th>Fecha de nacimiento</th>
             </tr>
-            <% for (Persona persona : personas) { %>
+            <% for (TrabajadorSalud trabajador : trabajadores) { %>
                 <tr>
-                    <td><%= persona.getCI() %></td>
-                    <td><%= persona.getNombre() %></td>
-                    <td><%= persona.getNacimiento() %></td>
+                    <td><%= trabajador.getCI() %></td>
+                    <td><%= trabajador.getNombre() %></td>
+                    <td><%= trabajador.getNacimiento() %></td>
                 </tr>
             <% } %>
         </table>
     <% } %>
 </body>
-
 </html>

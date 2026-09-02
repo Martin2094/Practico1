@@ -8,105 +8,76 @@ import java.util.Scanner;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import entidadMG.Persona;
-import negocio.PersonaNegocioRemota;
+import entidadMG.TrabajadorSalud;
+import negocio.TrabajadorNegRemota;
 
 public class ConsolaJava {
-
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-
         try {
-
-        	PersonaNegocioRemota service = obtenerServicioRemoto();
-
+            TrabajadorNegRemota service = obtenerServicioRemoto();
             int opcion;
-
             do {
-
                 System.out.println();
-                System.out.println("=== GESTOR DE PERSONAS ===");
-                System.out.println("1 - Agregar persona");
-                System.out.println("2 - Listar personas");
-                System.out.println("3 - Buscar persona");
+                System.out.println("=== GESTOR DE TRABAJADORES DE LA SALUD ===");
+                System.out.println("1 - Agregar trabajador de la salud");
+                System.out.println("2 - Listar trabajadores de la salud");
+                System.out.println("3 - Buscar trabajador de la salud");
                 System.out.println("0 - Salir");
                 System.out.print("Opcion: ");
-
+ 
                 opcion = scanner.nextInt();
                 scanner.nextLine();
-
                 switch (opcion) {
-
                     case 1:
-                        agregarPersona(scanner, service);
+                        agregarTrabajador(scanner, service);
                         break;
-
                     case 2:
-                        listarPersonas(service);
+                        listarTrabajadores(service);
                         break;
-
                     case 3:
-                        buscarPersona(scanner, service);
+                        buscarTrabajador(scanner, service);
                         break;
-
                     case 0:
                         System.out.println("Fin del programa.");
                         break;
-
                     default:
                         System.out.println("Opcion invalida.");
                 }
-
             } while (opcion != 0);
-
         } catch (Exception e) {
-
             System.out.println("Error al conectarse con WildFly:");
             e.printStackTrace();
-
         } finally {
-
             scanner.close();
         }
     }
-
-    private static PersonaNegocioRemota obtenerServicioRemoto()
+    private static TrabajadorNegRemota obtenerServicioRemoto()
             throws Exception {
-
         Hashtable<String, Object> propiedades = new Hashtable<>();
-
         propiedades.put(
                 Context.INITIAL_CONTEXT_FACTORY,
                 "org.wildfly.naming.client.WildFlyInitialContextFactory"
         );
-
         propiedades.put(
                 Context.PROVIDER_URL,
                 "http-remoting://localhost:8080"
         );
-
         propiedades.put(
                 "jboss.naming.client.ejb.context",
                 true
         );
-
         Context contexto = new InitialContext(propiedades);
-
         String jndi =
                 "ejb:/Practico1-1.0.0/"
-                + "PersonaNegocioBean!"
-                + "negocio.PersonaNegocioRemota";
-
-        return (PersonaNegocioRemota) contexto.lookup(jndi);
+                + "TrabajadorSaludNegocioBean!"
+                + "negocio.TrabajadorSaludNegocioRemota";
+        return (TrabajadorNegRemota) contexto.lookup(jndi);
     }
-
-    private static void agregarPersona(
-            Scanner scanner,
-            PersonaNegocioRemota service) {
-
-        System.out.print("ID: ");
-        Integer id = scanner.nextInt();
+    
+    private static void agregarTrabajador(Scanner scanner, TrabajadorNegRemota service) {
+        System.out.print("CI: ");
+        Integer ci = scanner.nextInt();
         scanner.nextLine();
 
         System.out.print("Nombre: ");
@@ -117,72 +88,47 @@ public class ConsolaJava {
 
         LocalDate fechaNacimiento = LocalDate.parse(fechaTexto);
 
-        Persona persona = new Persona();
+        TrabajadorSalud trabajador = new TrabajadorSalud();
 
-        persona.setCI(id);
-        persona.setNombre(nombre);
-        persona.setNacimiento(fechaNacimiento);
-
+        trabajador.setCI(ci);
+        trabajador.setNombre(nombre);
+        trabajador.setNacimiento(fechaNacimiento);
         try {
-
-            service.agregar(persona);
-
-            System.out.println("Persona agregada correctamente.");
-
+            service.agregar(trabajador);
+            System.out.println("Trabajador agregado correctamente.");
         } catch (Exception e) {
-
             System.out.println("Error: " + e.getMessage());
         }
     }
-
-    private static void listarPersonas(
-    		PersonaNegocioRemota service) {
-
-        List<Persona> personas = service.listar();
-
-        if (personas.isEmpty()) {
-
-            System.out.println("No hay personas registradas.");
+    
+    private static void listarTrabajadores(TrabajadorNegRemota service) {
+        List<TrabajadorSalud> trabajadores = service.listar();
+        if (trabajadores.isEmpty()) {
+            System.out.println("No hay trabajadores registrados.");
             return;
         }
-
-        for (Persona persona : personas) {
-
+        for (TrabajadorSalud trabajador : trabajadores) {
             System.out.println(
-                    persona.getCI()
+                    trabajador.getCI()
                     + " | "
-                    + persona.getNombre()
+                    + trabajador.getNombre()
                     + " | "
-                    + persona.getNacimiento()
+                    + trabajador.getNacimiento()
             );
         }
     }
 
-    private static void buscarPersona(
-            Scanner scanner,
-            PersonaNegocioRemota service) {
-
-        System.out.print("ID: ");
-
-        Integer id = scanner.nextInt();
+    private static void buscarTrabajador(Scanner scanner, TrabajadorNegRemota service) {
+        System.out.print("CI: ");
+        Integer ci = scanner.nextInt();
         scanner.nextLine();
-
-        Persona persona = service.buscarPorCI(id);
-
-        if (persona == null) {
-
-            System.out.println(
-                    "No existe una persona con ese ID."
-            );
-
+        TrabajadorSalud trabajador = service.buscarPorCI(ci);
+        if (trabajador == null) {
+            System.out.println("No existe un trabajador con esa CI.");
             return;
         }
-
-        System.out.println("ID: " + persona.getCI());
-        System.out.println("Nombre: " + persona.getNombre());
-        System.out.println(
-                "Fecha nacimiento: "
-                + persona.getNacimiento()
-        );
+        System.out.println("CI: " + trabajador.getCI());
+        System.out.println("Nombre: " + trabajador.getNombre());
+        System.out.println("Fecha nacimiento: " + trabajador.getNacimiento());
     }
 }

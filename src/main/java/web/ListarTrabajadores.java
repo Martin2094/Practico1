@@ -10,20 +10,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import entidadMG.Persona;
-import negocio.PersonaNegocioLocal;
+import entidadMG.TrabajadorSalud;
+import negocio.TrabajadorNegLocal;
 
-@WebServlet("/listarPersonas")
-public class ListarPersonas extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@WebServlet("/listarTrabajadores")
+public class ListarTrabajadores extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-	@EJB
-    private PersonaNegocioLocal personaNegocio;
-	
-	@Override
+    @EJB
+    private TrabajadorNegLocal trabajadorNegocio;
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Persona> personas = personaNegocio.listar();
-        request.setAttribute("personas", personas);
+        List<TrabajadorSalud> trabajadores = trabajadorNegocio.listar();
+        request.setAttribute("trabajadores", trabajadores);
         request.getRequestDispatcher("/listar.jsp").forward(request, response);
     }
 }

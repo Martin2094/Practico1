@@ -9,25 +9,25 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import entidadMG.Persona;
-import negocio.PersonaNegocioLocal;
+import entidadMG.TrabajadorSalud;
+import negocio.TrabajadorNegLocal;
 
-@WebServlet("/buscarPersona")
-public class BuscarPersonaID extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@WebServlet("/buscarTrabajador")
+public class BuscarTrabajador extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @EJB
-    private PersonaNegocioLocal personaNegocio;
-    
+    private TrabajadorNegLocal trabajadorNegocio;
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String ciTexto = request.getParameter("CI");
         Integer CI = Integer.valueOf(ciTexto);
-        Persona persona = personaNegocio.buscarPorCI(CI);
-        if (persona != null) {
-            request.setAttribute("persona", persona);
+        TrabajadorSalud trabajador = trabajadorNegocio.buscarPorCI(CI);
+        if (trabajador != null) {
+            request.setAttribute("trabajador", trabajador);
         } else {
-            request.setAttribute("error", "No existe una persona con esa CI");
+            request.setAttribute("error", "No existe un trabajador con esa CI");
         }
         request.getRequestDispatcher("/buscar.jsp").forward(request, response);
     }
