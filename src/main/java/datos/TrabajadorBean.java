@@ -1,34 +1,30 @@
 package datos;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.ejb.Singleton;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import entidadMG.TrabajadorSalud;
 
 @Singleton
 public class TrabajadorBean implements TrabajadorLocal, TrabajadorRemoto {
-    private List<TrabajadorSalud> trabajadores = new ArrayList<>();
+    @PersistenceContext(unitName = "Practico1PU")
+    private EntityManager em;
 
     @Override
     public void agregar(TrabajadorSalud trabajador) {
-        trabajadores.add(trabajador);
+        em.persist(trabajador);
     }
 
     @Override
     public List<TrabajadorSalud> listar() {
-        return new ArrayList<>(trabajadores);
+        return em.createQuery("SELECT t FROM TrabajadorSalud t", TrabajadorSalud.class).getResultList();
     }
 
     @Override
     public TrabajadorSalud buscarPorCI(Integer CI) {
-        for (TrabajadorSalud trabajador : trabajadores) {
-            if (Objects.equals(trabajador.getCI(), CI)) {
-                return trabajador;
-            }
-        }
-        return null;
+        return em.find(TrabajadorSalud.class, CI);
     }
 }

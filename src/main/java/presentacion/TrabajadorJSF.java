@@ -2,11 +2,16 @@ package presentacion;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import jakarta.jms.ConnectionFactory;
+import jakarta.annotation.Resource;
+import jakarta.jms.JMSContext;
+import jakarta.jms.Queue;
 
 import entidadMG.TrabajadorSalud;
 import negocio.TrabajadorNegLocal;
@@ -16,6 +21,12 @@ import negocio.TrabajadorNegLocal;
 public class TrabajadorJSF implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Resource(lookup = "java:/JmsXA")
+    private ConnectionFactory connectionFactory;
+
+    @Resource(lookup = "java:/jms/queue/queue_alta_trabajador")
+    private Queue colaAlta;
+    
     @EJB
     private TrabajadorNegLocal trabajadorNegocio;
 
@@ -32,16 +43,17 @@ public class TrabajadorJSF implements Serializable {
     public void agregar() {
         mensaje = null;
         error = null;
-        TrabajadorSalud trabajador = new TrabajadorSalud();
-        trabajador.setCI(ci);
-        trabajador.setNombre(nombre);
-        trabajador.setNacimiento(nacimiento);
         try {
-            trabajadorNegocio.agregar(trabajador);
-            mensaje = "Trabajador de la salud agregado correctamente.";
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String mensajeAlta = ci + "|" + nombre + "|" + nacimiento.format(formato);
+            
+            try (JMSContext contextoJMS = connectionFactory.createContext()) {
+                contextoJMS.createProducer().send(colaAlta, mensajeAlta);
+            }
+            mensaje = "Solicitud de alta enviada correctamente.";
             limpiarFormulario();
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
+        } catch (Exception e) {
+            error = "Error enviando solicitud de alta: " + e.getMessage();
         }
     }
 
